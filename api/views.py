@@ -1,6 +1,7 @@
 from itertools import product
-from math import prod
-from django.http import JsonResponse
+import json
+from django.http import JsonResponse, HttpResponse
+from django.forms.models import model_to_dict
 from products.models import Product
 
 
@@ -9,9 +10,8 @@ def ApiHome(request, *args, **kwargs):
     product_data = Product.objects.all().order_by('?').first()
     data = {}
     if product_data:
-        data['id'] = product_data.id
-        data['title'] = product_data.product
-        data['content'] = product_data.content
-        data['price'] = product_data.price
+        data = model_to_dict(product_data , fields={'id','product','price'})
+        json_data_re = json.dumps(data)
+        print(data)
 
-    return JsonResponse(data)
+    return HttpResponse(json_data_re , headers={"content-type":"application/json"})
