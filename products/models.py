@@ -7,3 +7,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product
+
+    @property
+    def product_name(self):
+        return 'this is a product'
+
+    def discount(self):
+        return '{:.2f}'.format(self.price)
