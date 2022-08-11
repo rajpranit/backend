@@ -10,7 +10,6 @@ from products.models import Product
 @api_view(["GET", 'POST'])
 def ApiHome(request, *args, **kwargs):
 
-    data = request.data
     serializer = ProductSerilizer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         # instance = serializer.save()
