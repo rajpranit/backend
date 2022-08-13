@@ -2,7 +2,7 @@ from rest_framework import generics
 from .serializers import ProductSerilizer
 from .models import Product
 
-class ProductCreateView(generics.CreateAPIView):
+class ProductListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
 
@@ -11,7 +11,8 @@ class ProductCreateView(generics.CreateAPIView):
         content = serializer.validated_data.get('content')
         if content is None:
             content='more big mansion'
-        serializer.save(content='more big house')
+        saved = serializer.save(content='more big house')
+        print(saved)
 
 class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
