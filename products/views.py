@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, mixins
 from django.shortcuts import get_object_or_404
 from .serializers import ProductSerilizer
 from .models import Product
@@ -49,6 +49,15 @@ class ProductDeleteView(generics.DestroyAPIView):
 
 product_delete_view = ProductDeleteView.as_view()
 
+class ProductMixinView(generics.GenericAPIView, mixins.ListModelMixin,):
+
+    queryset = Product.objects.all()
+    serializer_class = ProductSerilizer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+product_mixin_view = ProductMixinView.as_view()
 
 
 
