@@ -11,7 +11,6 @@ class ProductListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         # print(serializer.validated_data)
-        product = serializer.validated_data.get('product')
         content = serializer.validated_data.get('content')
         if content is None:
             content='more big mansion'
@@ -34,8 +33,8 @@ class ProductUpdateView(generics.UpdateAPIView):
     def perform_update(self, serializer):
         instance = serializer.save()
         print(instance)
-        if not instance.content:
-            instance.content = instance.title
+        if  instance.content:
+            instance.content = instance.product
 
 product_update_view = ProductUpdateView.as_view()
 
@@ -49,7 +48,7 @@ class ProductDeleteView(generics.DestroyAPIView):
 
 product_delete_view = ProductDeleteView.as_view()
 
-class ProductMixinView(generics.GenericAPIView, mixins.ListModelMixin, mixins.RetrieveModelMixin):
+class ProductMixinView(generics.GenericAPIView, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin):
 
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
@@ -60,6 +59,9 @@ class ProductMixinView(generics.GenericAPIView, mixins.ListModelMixin, mixins.Re
             return self.retrieve(request, *args, **kwargs)
 
         return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 product_mixin_view = ProductMixinView.as_view()
 
