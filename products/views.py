@@ -1,7 +1,6 @@
-from ast import Delete
-import re
 from rest_framework.response import Response
-from rest_framework import generics, mixins
+from .permissions import IsStaffEdittedPermision
+from rest_framework import generics, mixins, permissions, authentication
 from django.shortcuts import get_object_or_404
 from .serializers import ProductSerilizer
 from .models import Product
@@ -10,6 +9,9 @@ from rest_framework.decorators import api_view
 class ProductListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAdminUser , IsStaffEdittedPermision]
+
 
     def perform_create(self, serializer):
         # print(serializer.validated_data)
@@ -53,6 +55,11 @@ class ProductDeleteView(generics.DestroyAPIView):
         return super().perform_destroy(instance)
 
 product_delete_view = ProductDeleteView.as_view()
+
+
+
+
+
 
 class ProductMixinView( generics.GenericAPIView,
                         mixins.ListModelMixin,
