@@ -1,16 +1,15 @@
 from rest_framework.response import Response
 from .permissions import IsStaffEdittedPermision
-from rest_framework import generics, mixins, permissions, authentication
+from rest_framework import generics, mixins, permissions
 from django.shortcuts import get_object_or_404
 from .serializers import ProductSerilizer
-from api.authentication import TokenAuthentication
+
 from .models import Product
 from rest_framework.decorators import api_view
 
 class ProductListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
-    authentication_classes = [authentication.SessionAuthentication, TokenAuthentication]
     permission_classes = [permissions.IsAdminUser , IsStaffEdittedPermision]
 
 
@@ -27,6 +26,7 @@ product_list_create_view = ProductListCreateView.as_view()
 class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
+    permission_classes = [permissions.IsAdminUser , IsStaffEdittedPermision]
 
 product_detail_view = ProductDetailView.as_view()
 
