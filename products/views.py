@@ -1,17 +1,15 @@
 from rest_framework.response import Response
-from .permissions import IsStaffEdittedPermision
-from rest_framework import generics, mixins, permissions
+from rest_framework import generics, mixins
 from django.shortcuts import get_object_or_404
-from .serializers import ProductSerilizer
 
+from .serializers import ProductSerilizer
+from api.mixins import StaffEditorPermissionMixin
 from .models import Product
 from rest_framework.decorators import api_view
 
-class ProductListCreateView(generics.ListCreateAPIView):
+class ProductListCreateView(StaffEditorPermissionMixin, generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
-    permission_classes = [permissions.IsAdminUser , IsStaffEdittedPermision]
-
 
     def perform_create(self, serializer):
         # print(serializer.validated_data)
@@ -23,17 +21,18 @@ class ProductListCreateView(generics.ListCreateAPIView):
 product_list_create_view = ProductListCreateView.as_view()
 
 
-class ProductDetailView(generics.RetrieveAPIView):
+class ProductDetailView(StaffEditorPermissionMixin, generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
-    permission_classes = [permissions.IsAdminUser , IsStaffEdittedPermision]
+
 
 product_detail_view = ProductDetailView.as_view()
 
-class ProductUpdateView(generics.UpdateAPIView):
+class ProductUpdateView(StaffEditorPermissionMixin, generics.UpdateAPIView ):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
     lookup_field = 'pk'
+
 
     def perform_update(self, serializer):
         # instance = serializer.save()
@@ -47,7 +46,7 @@ class ProductUpdateView(generics.UpdateAPIView):
 
 product_update_view = ProductUpdateView.as_view()
 
-class ProductDeleteView(generics.DestroyAPIView):
+class ProductDeleteView(StaffEditorPermissionMixin, generics.DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
     lookup_field = 'pk'
