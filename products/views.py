@@ -24,6 +24,7 @@ product_list_create_view = ProductListCreateView.as_view()
 class ProductDetailView(StaffEditorPermissionMixin, generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
+    lookup_field = 'pk'
 
 
 product_detail_view = ProductDetailView.as_view()

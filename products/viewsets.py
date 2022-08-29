@@ -6,4 +6,4 @@ class ProductView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
 
-product_viewset = ProductView.as_view({'put':'update'})
+# product_viewset = ProductView.as_view({'put':'update'})
