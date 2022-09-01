@@ -3,11 +3,11 @@ from rest_framework import generics, mixins
 from django.shortcuts import get_object_or_404
 
 from .serializers import ProductSerilizer
-from api.mixins import StaffEditorPermissionMixin
+from api.mixins import StaffEditorPermissionMixin, UserQuerySetMixin
 from .models import Product
 from rest_framework.decorators import api_view
 
-class ProductListCreateView(StaffEditorPermissionMixin, generics.ListCreateAPIView):
+class ProductListCreateView(UserQuerySetMixin, StaffEditorPermissionMixin, generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerilizer
 
@@ -16,7 +16,14 @@ class ProductListCreateView(StaffEditorPermissionMixin, generics.ListCreateAPIVi
         content = serializer.validated_data.get('content')
         if content is None:
             content='more big mansion'
-            serializer.save(content='more big house')
+            serializer.save(user=self.request.user, content='more big house')
+
+    # def get_queryset(self, *args, **kwargs):
+    #     qs = super().get_queryset(*args, **kwargs)
+    #     request = self.request
+    #     if not request.user.is_authenticated:
+    #         return Product.objects.none()
+    #     return qs.filter(user=request.user)
 
 product_list_create_view = ProductListCreateView.as_view()
 

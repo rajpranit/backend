@@ -10,6 +10,6 @@ from rest_framework.validators import UniqueValidator
 
 def validate_title_no_book(value):
     if 'book' in value.lower():
-        raise serializers.ValidationError("no book accepted")
+        raise serializers.ValidationError("no hello accepted")
     return value
-unique_product_title = UniqueValidator(Product.objects.all())
+unique_product_title = UniqueValidator(Product.objects.all(), lookup="iexact")
